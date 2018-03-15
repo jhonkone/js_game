@@ -1,0 +1,7 @@
+preload();
+
+create();
+
+// class Welcome {
+
+// }
