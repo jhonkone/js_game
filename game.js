@@ -41,7 +41,7 @@ function preload ()
     this.load.image('background', 'assets/background_v3.png');
     this.load.image('ball', 'assets/football_small.png');
     this.load.image('ball2', 'assets/football_small.png');
-    this.load.image('pauseButton', 'assets/pause_button.png');
+    this.load.image('button', 'assets/button.png');
 }
 
 
@@ -49,12 +49,14 @@ function create ()
 {
     this.add.image(400, 300, 'background');
 
-    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 15, 'Score: 0', { font: "bold 30px Arial", fill: '#000' });
+    
     //clockText = this.add.text(16, 64, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
-    pauseButton = this.add.sprite(744, 31, 'pauseButton');// .add.button(700, 16, 'blue_v2', stopOnClick, this, 2, 1, 0);
+    pauseButton = this.add.sprite(729, 31, 'button');// .add.button(700, 16, 'blue_v2', stopOnClick, this, 2, 1, 0);
     pauseButton.setInteractive();
     pauseButton.on('pointerdown', togglePause);
+    pauseText = this.add.text(684, 15, 'Pause', { font: "bold 30px Arial", fill: '#C0C0C0' });
 
     var particles = this.add.particles('blue_v2');
 
@@ -119,7 +121,7 @@ function collisionHandler (ball, ball2) {
     score++;
     collisionDetected = true;
     ball.setBounce(collisionBounce);
-    scoreText.setText("Score " + score);
+    scoreText.setText("Score: " + score);
 }
 
 function togglePause() {
