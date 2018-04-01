@@ -11,6 +11,8 @@ var collisionBounce = (1, 10);
 var speed = 10;
 var playingTime = 500;
 var clock = 0;
+var pauseButton;
+var pause = false;
 
 var config = {
     type: Phaser.AUTO,
@@ -32,7 +34,6 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-
 // Load images
 function preload ()
 {
@@ -40,6 +41,7 @@ function preload ()
     this.load.image('background', 'assets/background_v3.png');
     this.load.image('ball', 'assets/football_small.png');
     this.load.image('ball2', 'assets/football_small.png');
+    this.load.image('pauseButton', 'assets/pause_button.png');
 }
 
 
@@ -49,6 +51,10 @@ function create ()
 
     scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
     //clockText = this.add.text(16, 64, 'Score: 0', { fontSize: '32px', fill: '#000' });
+
+    pauseButton = this.add.sprite(744, 31, 'pauseButton');// .add.button(700, 16, 'blue_v2', stopOnClick, this, 2, 1, 0);
+    pauseButton.setInteractive();
+    pauseButton.on('pointerdown', togglePause);
 
     var particles = this.add.particles('blue_v2');
 
@@ -84,6 +90,8 @@ function update()
     
     this.physics.collide(ball, ball2, collisionHandler, null, this);
 
+
+
     if(collisionDetected) {
         collisionDetected = false;
         ball.setBounce(defaultBounce);
@@ -112,4 +120,12 @@ function collisionHandler (ball, ball2) {
     collisionDetected = true;
     ball.setBounce(collisionBounce);
     scoreText.setText("Score " + score);
+}
+
+function togglePause() {
+
+    //this.physics.arcade.isPaused = (this.physics.arcade.isPaused) ? false : true;
+    ball.body.enable = ball.body.enable ? false: true;
+    ball2.body.enable = ball2.body.enable ? false: true;
+
 }
