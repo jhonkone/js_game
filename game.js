@@ -2,7 +2,7 @@ var score = 0;
 var scoreText = '';
 var collisionDetected = false;
 //var cursors;
-//var ball;
+var ball;
 //var ball2;
 var defaultVelocity = 3;
 var maxVelocity = 1000;
@@ -43,11 +43,14 @@ function preload ()
     this.load.image('ball', 'assets/football_small.png');
     this.load.image('ball2', 'assets/football_small.png');
     this.load.image('button', 'assets/button.png');
+
 }
 
 
 function create ()
 {
+
+
     this.add.image(400, 300, 'background');
 
     scoreText = this.add.text(16, 15, 'Score: 0', { font: "bold 30px Arial", fill: '#000' });
@@ -92,8 +95,23 @@ function create ()
     
     this.physics.add.collider(ball.body, ball2.body);
 
+    // cursors for keyboard input
     cursors = this.input.keyboard.createCursorKeys();
     //soundToggle = this.add.button(config.width - 150, 15, 'button', this.toggleSound, this);
+
+    // For mobile accelerometer input
+    if (window.DeviceOrientationEvent) {
+    
+        window.addEventListener("deviceorientation", function(event) 
+        {
+            ball.body.velocity.y = Math.round(event.beta);
+            ball.body.velocity.x = Math.round(event.gamma);
+        }
+                                )
+    }
+    else {
+        alert("Sorry, your browser doesn't support Device Orientation");
+    } ;
 }
 
 
@@ -104,7 +122,7 @@ function update()
     
     this.physics.collide(ball, ball2, collisionHandler, null, this);
 
-
+    //todo: if key f isDown goFullScreen();
 
     if(collisionDetected) {
         collisionDetected = false;
@@ -158,4 +176,12 @@ function saveGame() {
     ball.body.enable = false;
     ball2.body.enable = false;
 
+}
+
+// function to scale up the game to full screen
+function goFullScreen(){
+    this.scale.pageAlignHorizontally = true;
+    this.scale.pageAlignVertically = true;
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.scale.setScreenSize(true);
 }
