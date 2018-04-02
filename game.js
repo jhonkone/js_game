@@ -15,6 +15,25 @@ var speed = 10;
 //var pause = false;
 //var loadButton;
 
+if ( !window.requestAnimationFrame ) {
+ 
+    window.requestAnimationFrame = ( function() {
+ 
+        return window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+ 
+            window.setTimeout( callback, 1000 / 60 );
+ 
+        };
+ 
+    } )();
+ 
+}
+
+
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -178,10 +197,10 @@ function saveGame() {
 
 }
 
-// function to scale up the game to full screen
-function goFullScreen(){
-    this.scale.pageAlignHorizontally = true;
-    this.scale.pageAlignVertically = true;
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.scale.setScreenSize(true);
-}
+// // function to scale up the game to full screen
+// function goFullScreen(){
+//     this.scale.pageAlignHorizontally = true;
+//     this.scale.pageAlignVertically = true;
+//     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+//     this.scale.setScreenSize(true);
+// }
