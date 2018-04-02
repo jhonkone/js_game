@@ -1,18 +1,19 @@
 var score = 0;
 var scoreText = '';
 var collisionDetected = false;
-var cursors;
-var ball;
-var ball2;
+//var cursors;
+//var ball;
+//var ball2;
 var defaultVelocity = 3;
 var maxVelocity = 1000;
 var defaultBounce = (1, 1);
-var collisionBounce = (1, 10);
+var collisionBounce = (1, 1);
 var speed = 10;
-var playingTime = 500;
-var clock = 0;
-var pauseButton;
-var pause = false;
+//var playingTime = 500;
+//var clock = 0;
+//var pauseButton;
+//var pause = false;
+//var loadButton;
 
 var config = {
     type: Phaser.AUTO,
@@ -53,10 +54,20 @@ function create ()
     
     //clockText = this.add.text(16, 64, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
-    pauseButton = this.add.sprite(729, 31, 'button');// .add.button(700, 16, 'blue_v2', stopOnClick, this, 2, 1, 0);
+    loadButton = this.add.sprite(329, 31, 'button');
+    loadButton.setInteractive();
+    loadButton.on('pointerdown', loadGame);
+    loadText = this.add.text(294, 15, 'Load', { font: "bold 30px Arial", fill: '#eee' });
+
+    saveButton = this.add.sprite(529, 31, 'button');
+    saveButton.setInteractive();
+    saveButton.on('pointerdown', saveGame);
+    saveText = this.add.text(494, 15, 'Save', { font: "bold 30px Arial", fill: '#eee' });
+
+    pauseButton = this.add.sprite(729, 31, 'button');
     pauseButton.setInteractive();
     pauseButton.on('pointerdown', togglePause);
-    pauseText = this.add.text(684, 15, 'Pause', { font: "bold 30px Arial", fill: '#C0C0C0' });
+    pauseText = this.add.text(684, 15, 'Pause', { font: "bold 30px Arial", fill: '#eee' });
 
     var particles = this.add.particles('blue_v2');
 
@@ -75,19 +86,20 @@ function create ()
 
     ball2 = this.physics.add.sprite(config.width, config.height, 'ball2');
     ball2.body.setVelocity(defaultVelocity*100, 1);
-    ball2.body.setBounce(defaultBounce);
+    ball2.body.setBounce(1,0.8);
     ball2.body.setCollideWorldBounds(true);
     ball2.setInteractive();
     
     this.physics.add.collider(ball.body, ball2.body);
 
     cursors = this.input.keyboard.createCursorKeys();
+    //soundToggle = this.add.button(config.width - 150, 15, 'button', this.toggleSound, this);
 }
 
 
 function update()
 {
-    clock++;
+    //clock++;
     //clockText.setText("Time left: " + (playingTime - clock));
     
     this.physics.collide(ball, ball2, collisionHandler, null, this);
@@ -124,10 +136,26 @@ function collisionHandler (ball, ball2) {
     scoreText.setText("Score: " + score);
 }
 
+
 function togglePause() {
 
-    //this.physics.arcade.isPaused = (this.physics.arcade.isPaused) ? false : true;
     ball.body.enable = ball.body.enable ? false: true;
     ball2.body.enable = ball2.body.enable ? false: true;
+
+}
+
+
+function loadGame() {
+    // First stop movement
+    ball.body.enable = false;
+    ball2.body.enable = false;
+
+}
+
+
+function saveGame() {
+    // First stop movement
+    ball.body.enable = false;
+    ball2.body.enable = false;
 
 }
