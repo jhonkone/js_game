@@ -123,8 +123,8 @@ function create ()
     
         window.addEventListener("deviceorientation", function(event) 
         {
-            //ball.body.velocity.y = Math.round(event.beta);
-            ball.body.velocity.x += Math.round(event.gamma) * speed;
+            ball.body.velocity.y += Math.round(event.beta);
+            ball.body.velocity.x += Math.round(event.gamma);
         }
                                 )
     }
