@@ -9,12 +9,15 @@ var maxVelocity = 1000;
 var defaultBounce = (1, 1);
 var collisionBounce = (1, 1);
 var speed = 10;
+var minVelocityX = 200; 
 //var playingTime = 500;
 //var clock = 0;
 //var pauseButton;
 //var pause = false;
 //var loadButton;
 
+
+// Enable mobile accelerometer
 if ( !window.requestAnimationFrame ) {
  
     window.requestAnimationFrame = ( function() {
@@ -118,7 +121,7 @@ function create ()
     cursors = this.input.keyboard.createCursorKeys();
     //soundToggle = this.add.button(config.width - 150, 15, 'button', this.toggleSound, this);
 
-    // For mobile accelerometer input
+    //Add listener for mobile accelerometer input
     if (window.DeviceOrientationEvent) {
     
         window.addEventListener("deviceorientation", function(event) 
@@ -142,6 +145,21 @@ function update()
     this.physics.collide(ball, ball2, collisionHandler, null, this);
 
     //todo: if key f isDown goFullScreen();
+
+    console.log(ball2.body.velocity.x);
+
+    //Don't let the lower ball stop
+    var velX = ball2.body.velocity.x; 
+    if(Math.abs(velX) < minVelocityX) {
+        // Consider direction
+        if(velX < 0) {
+            ball2.body.setVelocity(velX - minVelocityX, ball2.body.velocity.y);
+        }
+        else{
+            ball2.body.setVelocity(velX + minVelocityX, ball2.body.velocity.y);
+        }
+        
+    }
 
     if(collisionDetected) {
         collisionDetected = false;
