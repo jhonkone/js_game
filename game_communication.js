@@ -1,6 +1,7 @@
-  /* global $, alert */
+// This file is responsible of communication between game and service
 
-// Functions for communication between game and service
+/* global $, alert */
+
 $(document).ready( function() {
     "use strict";
 
@@ -117,4 +118,31 @@ $(document).ready( function() {
       }
     });
 
-    
+
+// Functions which triggers hidden html button elements for service communication
+
+function submitScore() {
+    // First stop movement
+    if(pauseText.text === "Pause") {
+        togglePause() ;
+    }
+    document.getElementById("submit_score").click(); // Click the hidden submit_score button
+}
+
+
+function loadGame() {
+    // First stop movement
+    if(pauseText.text === "Pause") {
+        togglePause() ;
+    }
+    document.getElementById("load").click(); // Click the hidden button
+}
+
+
+function saveGame() {
+    // First stop movement
+    if(pauseText.text === "Pause") {
+        togglePause() ;
+    }  
+    document.getElementById("save").click(); // Click the hidden button
+}

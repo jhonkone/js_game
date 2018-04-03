@@ -1,3 +1,5 @@
+// This file is responsible for all game logic - controlling the balls, 
+
 var score = 0;
 var scoreText = '';
 var ball;
@@ -117,7 +119,7 @@ function create ()
     // Possible TODO: sounds and a button for enabling/disabling sounds
     //soundToggle = this.add.button(config.width - 150, 15, 'button', this.toggleSound, this);
 
-    //Add listener for mobile accelerometer input
+    //Add deviceOrientation event listener for mobile accelerometer input data
     if (window.DeviceOrientationEvent) {
     
         window.addEventListener("deviceorientation", function(event) 
@@ -196,36 +198,7 @@ function collisionHandler (ball, ball2) {
     scoreText.setText("Score: " + score);
 }
 
-
-// Functions which triggers hidden html button elements for service communication
-
-function submitScore() {
-    // First stop movement
-    if(pauseText.text === "Pause") {
-        togglePause() ;
-    }
-    document.getElementById("submit_score").click(); // Click the hidden submit_score button
-}
-
-
-function loadGame() {
-    // First stop movement
-    if(pauseText.text === "Pause") {
-        togglePause() ;
-    }
-    document.getElementById("load").click(); // Click the hidden button
-}
-
-
-function saveGame() {
-    // First stop movement
-    if(pauseText.text === "Pause") {
-        togglePause() ;
-    }  
-    document.getElementById("save").click(); // Click the hidden button
-}
-
-
+// Function for Pause / Continue button
 function togglePause() {
 
     ball.body.enable = ball.body.enable ? false: true;
@@ -233,6 +206,7 @@ function togglePause() {
 
     pauseText.text === "Pause" ? pauseText.setText(" Cont.") : pauseText.setText("Pause") ;
 }
+
 
 // Possibly TODO - not working
 // // function to scale up the game to full screen
