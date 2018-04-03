@@ -146,8 +146,6 @@ function update()
 
     //todo: if key f isDown goFullScreen();
 
-    console.log(ball2.body.velocity.x);
-
     //Don't let the lower ball stop
     var velX = ball2.body.velocity.x; 
     if(Math.abs(velX) < minVelocityX) {
