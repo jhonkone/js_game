@@ -9,7 +9,7 @@ var maxVelocity = 1000;
 var defaultBounce = (1, 1);
 var collisionBounce = (1, 1);
 var speed = 10;
-var minVelocityX = 200; 
+var minVelocityX = 300; 
 //var playingTime = 500;
 //var clock = 0;
 //var pauseButton;
@@ -110,7 +110,7 @@ function create ()
     emitter.startFollow(ball);
 
     ball2 = this.physics.add.sprite(config.width, config.height, 'ball2');
-    ball2.body.setVelocity(defaultVelocity*100, 1);
+    ball2.body.setVelocity(minVelocityX, 1);
     ball2.body.setBounce(1,0.8);
     ball2.body.setCollideWorldBounds(true);
     ball2.setInteractive();
