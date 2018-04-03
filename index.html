@@ -1,41 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Jumping Ball</title>
+  <title>Bouncing Ball Game</title>
   <meta charset="utf-8"/>
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="phaser.min.js"></script>
   <script>
   /* global $, alert */
 
+// Functions for communication between game and service
+
   $(document).ready( function() {
     "use strict";
-/**
-    // These variable track the state of this "game"
-    var playerItems = [];
-    var points = 0;
 
-    // Simulates "game over" when a score would be sent
-    $("#submit_score").click( function () {
-      var msg = {
-        "messageType": "SCORE",
-        "score": parseFloat($("#score").text())
+    // Request the service to set the resolution of the
+    // iframe correspondingly
+    var message =  {
+        messageType: "SETTING",
+        options: {
+            "width": 800, //Integer
+          "height": 600 //Integer
+          }
       };
-      window.parent.postMessage(msg, "*");
-    });
+      window.parent.postMessage(message, "*");
+      window.focus();
 
     // Sends this game's state to the service.
-    // The format of the game state is decided
-    // by the game
     $("#save").click( function () {
       var msg = {
         "messageType": "SAVE",
         "gameState": {
-          "playerItems": playerItems,
-          "score": parseFloat($("#score").text())
+          "score": score,
+          "playingTime": playingTime,
+          "ball_location_x": ball.x,
+          "ball_location_y": ball.y,
+          "ball_velocity_x": ball.body.velocity.x,
+          "ball_velocity_y": ball.body.velocity.y,
+          "ball2_location_x": ball2.x,
+          "ball2_location_y": ball2.y,
+          "ball2_velocity_x": ball2.body.velocity.x,
+          "ball2_velocity_y": ball2.body.velocity.y,
         }
       };
       window.parent.postMessage(msg, "*");
+
+      // TODO: REMOVE LINES:
+      console.log("Submitted msg:" + msg.messageType,
+      msg.gameState.score, msg.gameState.playingTime, 
+      msg.gameState.ball_location_x, msg.gameState.ball_location_y, msg.gameState.ball_velocity_x, msg.gameState.ball_velocity_y,
+      msg.gameState.ball2_location_x, msg.gameState.ball2_location_y, msg.gameState.ball2_velocity_x, msg.gameState.ball2_velocity_y);  
     });
 
     // Sends a request to the service for a
@@ -45,56 +58,22 @@
         "messageType": "LOAD_REQUEST",
       };
       window.parent.postMessage(msg, "*");
+      console.log("Submitted msg:" + msg.messageType); // TODO: REMOVE LINE
     });
 
-    // Listen incoming messages, if the messageType
-    // is LOAD then the game state will be loaded.
-    // Note that no checking is done, whether the
-    // gameState in the incoming message contains
-    // correct information.
-    //
-    // Also handles any errors that the service
-    // wants to send (displays them as an alert).
-    window.addEventListener("message", function(evt) {
-      if(evt.data.messageType === "LOAD") {
-        playerItems = evt.data.gameState.playerItems;
-        points = evt.data.gameState.score;
-        $("#score").text(points);
-        updateItems();
-      } else if (evt.data.messageType === "ERROR") {
-        alert(evt.data.info);
-      }
+
+    // Submits score to service
+    // Possible TODO: This could be called once when time is up 
+    // and Submit button could be removed
+    $("#submit_score").click( function () {
+      var msg = {
+        "messageType": "SCORE",
+        "score": score
+      };
+      window.parent.postMessage(msg, "*");
+      console.log("Submitted msg:" + msg.messageType, msg.score); // TODO: REMOVE LINE
     });
 
-    // This is part of the mechanics of the "game"
-    // it does not relate to the messaging with the
-    // service.
-    //
-    // Adds an item to the players inventory
-    $("#add_item").click( function () {
-      playerItems.push("A rock");
-      $("#new_item").val("");
-      updateItems();
-    });
-
-    $("#add_points").click(function () {
-      points += 10;
-      $("#score").text(points);
-    });
-
-    // This is part of the mechanics of the "game"
-    // it does not relate to the messaging with the
-    // service.
-    //
-    // "Redraws" the inventory of the player. Used
-    // when items are added or the game is loaded
-    function updateItems() {
-      $("#item_list").html("");
-      for (var i = playerItems.length - 1; i >= 0; i--) {
-        $("#item_list").append("<li>" + playerItems[i] + "</li>");
-      }
-    }
-*/
     // Request the service to set the resolution of the
     // iframe correspondingly
     var message =  {
@@ -105,24 +84,55 @@
         }
     };
     window.parent.postMessage(message, "*");
+    // Set focus for controls
     window.focus();
-
   });
+
+    // Listen incoming messages, if the messageType
+    // is LOAD then the game state will be loaded.
+    // NOTE THAT NO CHECKING IS DONE, whether the
+    // gameState in the incoming message contains
+    // correct information.
+    //
+    // Also handles any errors that the service
+    // wants to send (displays them as an alert).
+    window.addEventListener("message", function(evt) {
+      if(evt.data.messageType === "LOAD") {
+        // TODO: CHECK VALUES
+        score = evt.data.gameState.score;
+        playingTime =  evt.data.gameState.playingTime;
+        ball.x = evt.data.gameState.ball_location_x;
+        ball.y = evt.data.gameState.ball_location_y;
+        ball.body.velocity.x = evt.data.gameState.ball_velocity_x; 
+        ball.body.velocity.y = evt.data.gameState.ball_velocity_y;
+        ball2.x = evt.data.gameState.ball2_location_x;
+        ball2.y = evt.data.gameState.ball2_location_y;
+        ball2.body.velocity.x = evt.data.gameState.ball2_velocity_x; 
+        ball2.body.velocity.y = evt.data.gameState.ball2_velocity_y;
+    
+        // Enable Pause (Cont.) button that might be disabled 
+        pauseButton.visible = true;
+        pauseText.visible = true;
+
+
+        // TODO: REMOVE LOGGING LINES:
+        console.log("Received msg:" + evt.data.messageType,
+        evt.data.gameState.score, evt.data.gameState.playingTime, 
+        evt.data.gameState.ball_location_x, evt.data.gameState.ball_location_y, evt.data.gameState.ball_velocity_x, evt.data.gameState.ball_velocity_y,
+        evt.data.gameState.ball2_location_x, evt.data.gameState.ball2_location_y, evt.data.gameState.ball2_velocity_x, evt.data.gameState.ball2_velocity_y);       
+    } 
+      else if (evt.data.messageType === "ERROR") {
+        alert(evt.data.info);
+      }
+    });
   </script>
 </head>
 <body>
   <script src="game.js"></script> 
-
-  <!-- <button id="add_item">Add a stone to backbag</button>
-  <button id="add_points">Add 10 points</button>
-
-  <h3>Backbag</h3>
-  <ul id="item_list"></ul>
-  <div><span  id="score">0</span> Points</div>
-
-  <button id="submit_score">Submit score</button><br>
-
-  <button id="save">Save</button>
-  <button id="load">Load</button> -->
+  
+  <!-- Hidden buttons which are clicked via Phaser UI-->
+  <button id="submit_score" style="display: none;">Submit score</button>
+  <button id="save" style="display: none;">Save</button>
+  <button id="load" style="display: none;">Load</button>
 </body>
 </html>

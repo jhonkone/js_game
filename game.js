@@ -1,21 +1,12 @@
 var score = 0;
 var scoreText = '';
-var collisionDetected = false;
-//var cursors;
 var ball;
-//var ball2;
-var defaultVelocity = 3;
-var maxVelocity = 1000;
+var ball2;
 var defaultBounce = (1, 1);
-var collisionBounce = (1, 1);
-var speed = 10;
-var minVelocityX = 300; 
-//var playingTime = 500;
-//var clock = 0;
-//var pauseButton;
-//var pause = false;
-//var loadButton;
-
+var cursorSpeed = 10;
+var minVelocityX = 300;
+var playingTime = 5000;
+var pauseButton;
 
 // Enable mobile accelerometer
 if ( !window.requestAnimationFrame ) {
@@ -35,7 +26,6 @@ if ( !window.requestAnimationFrame ) {
     } )();
  
 }
-
 
 var config = {
     type: Phaser.AUTO,
@@ -68,34 +58,39 @@ function preload ()
 
 }
 
-
+// Create sprites for images, texts and sprites and add them to canvas
 function create ()
 {
-
-
     this.add.image(400, 300, 'background');
 
-    scoreText = this.add.text(16, 15, 'Score: 0', { font: "bold 30px Arial", fill: '#000' });
+    scoreText = this.add.text(16, 15, 'Score: 0', { font: "bold 28px Arial", fill: '#000' });
     
-    //clockText = this.add.text(16, 64, 'Score: 0', { fontSize: '32px', fill: '#000' });
+    playingTimeText = this.add.text(16, 64, 'Score: 0', { font: "bold 28px Arial", fill: '#000' });
 
-    loadButton = this.add.sprite(329, 31, 'button');
+    submitButton = this.add.sprite(229, 31, 'button');
+    submitButton.setInteractive();
+    submitButton.on('pointerdown', submitScore);
+    submitText = this.add.text(184, 15, 'Submit', { font: "bold 26px Arial", fill: '#eee' });
+    
+    
+    loadButton = this.add.sprite(396, 31, 'button');
     loadButton.setInteractive();
     loadButton.on('pointerdown', loadGame);
-    loadText = this.add.text(294, 15, 'Load', { font: "bold 30px Arial", fill: '#eee' });
+    loadText = this.add.text(362, 15, 'Load', { font: "bold 28px Arial", fill: '#eee' });
 
-    saveButton = this.add.sprite(529, 31, 'button');
+    saveButton = this.add.sprite(563, 31, 'button');
     saveButton.setInteractive();
     saveButton.on('pointerdown', saveGame);
-    saveText = this.add.text(494, 15, 'Save', { font: "bold 30px Arial", fill: '#eee' });
+    saveText = this.add.text(530, 15, 'Save', { font: "bold 28px Arial", fill: '#eee' });
 
     pauseButton = this.add.sprite(729, 31, 'button');
     pauseButton.setInteractive();
     pauseButton.on('pointerdown', togglePause);
-    pauseText = this.add.text(684, 15, 'Pause', { font: "bold 30px Arial", fill: '#eee' });
+    pauseText = this.add.text(688, 15, 'Pause', { font: "bold 28px Arial", fill: '#eee' });
 
     var particles = this.add.particles('blue_v2');
 
+    // Lighting effect for ball
     var emitter = particles.createEmitter({
         speed: 10,
         scale: { start: 1, end: 0 },
@@ -103,7 +98,7 @@ function create ()
     });
 
     ball = this.physics.add.sprite(400, 100, 'ball');
-    ball.body.setVelocity(defaultVelocity, 1);
+    ball.body.setVelocity(0, 1);
     ball.body.setBounce(1, 1);
     ball.body.setCollideWorldBounds(true);
     ball.setInteractive();
@@ -117,8 +112,9 @@ function create ()
     
     this.physics.add.collider(ball.body, ball2.body);
 
-    // cursors for keyboard input
+    // Create variable for keyboard input
     cursors = this.input.keyboard.createCursorKeys();
+    // Possible TODO: sounds and a button for enabling/disabling sounds
     //soundToggle = this.add.button(config.width - 150, 15, 'button', this.toggleSound, this);
 
     //Add listener for mobile accelerometer input
@@ -139,54 +135,94 @@ function create ()
 
 function update()
 {
-    //clock++;
-    //clockText.setText("Time left: " + (playingTime - clock));
-    
-    this.physics.collide(ball, ball2, collisionHandler, null, this);
-
-    //todo: if key f isDown goFullScreen();
-
-    //Don't let the lower ball stop
-    var velX = ball2.body.velocity.x; 
-    if(Math.abs(velX) < minVelocityX) {
-        // Consider direction
-        if(velX < 0) {
-            ball2.body.setVelocity(velX - minVelocityX, ball2.body.velocity.y);
-        }
-        else{
-            ball2.body.setVelocity(velX + minVelocityX, ball2.body.velocity.y);
+    // First check that there is playingTime left
+    if(playingTime > 0) {
+        // Decrease playingTime if Pause button not pressed
+        if(pauseText.text === "Pause") {
+            playingTime--;
+            playingTimeText.setText("Time: " + (playingTime));
         }
         
-    }
+        // Check collisions
+        this.physics.collide(ball, ball2, collisionHandler, null, this);
 
-    if(collisionDetected) {
-        collisionDetected = false;
-        ball.setBounce(defaultBounce);
-    }
-    if (cursors.left.isDown)
-    {
-        ball.body.setVelocity(ball.body.velocity.x - speed, ball.body.velocity.y);
-        
-    }
-    else if (cursors.right.isDown)
-    {
-        ball.body.setVelocity(ball.body.velocity.x + speed, ball.body.velocity.y);
-    }
-    else if (cursors.up.isDown)
-    {
-        ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y - speed);
-    }
 
-    else if (cursors.down.idDown) {
-        ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y + speed);
+        //Don't let the lower ball stop
+        var velX = ball2.body.velocity.x; 
+        if(Math.abs(velX) < minVelocityX) {
+            // Consider direction
+            if(velX < 0) {
+                ball2.body.setVelocity(velX - minVelocityX, ball2.body.velocity.y);
+            }
+            else{
+                ball2.body.setVelocity(velX + minVelocityX, ball2.body.velocity.y);
+            }
+            
+        }
+
+        // Keyboard input for moving ball
+        if (cursors.left.isDown)
+        {
+            ball.body.setVelocity(ball.body.velocity.x - cursorSpeed, ball.body.velocity.y);
+            
+        }
+        else if (cursors.right.isDown)
+        {
+            ball.body.setVelocity(ball.body.velocity.x + cursorSpeed, ball.body.velocity.y);
+        }
+        else if (cursors.up.isDown)
+        {
+            ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y - cursorSpeed);
+        }
+
+        else if (cursors.down.idDown) {
+            ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y + cursorSpeed);
+        }
+    }
+    // When time is up 
+    else {
+        // Stop movement
+        if(pauseText.text === "Pause") {
+            togglePause();
+        }
+        // Hide Pause (or Cont.) button   
+        pauseButton.visible = false;
+        pauseText.visible = false;
     }
 }
 
 function collisionHandler (ball, ball2) {
     score++;
-    collisionDetected = true;
-    ball.setBounce(collisionBounce);
     scoreText.setText("Score: " + score);
+}
+
+
+// Functions which triggers hidden html button elements for service communication
+
+function submitScore() {
+    // First stop movement
+    if(pauseText.text === "Pause") {
+        togglePause() ;
+    }
+    document.getElementById("submit_score").click(); // Click the hidden submit_score button
+}
+
+
+function loadGame() {
+    // First stop movement
+    if(pauseText.text === "Pause") {
+        togglePause() ;
+    }
+    document.getElementById("load").click(); // Click the hidden button
+}
+
+
+function saveGame() {
+    // First stop movement
+    if(pauseText.text === "Pause") {
+        togglePause() ;
+    }  
+    document.getElementById("save").click(); // Click the hidden button
 }
 
 
@@ -195,24 +231,10 @@ function togglePause() {
     ball.body.enable = ball.body.enable ? false: true;
     ball2.body.enable = ball2.body.enable ? false: true;
 
+    pauseText.text === "Pause" ? pauseText.setText(" Cont.") : pauseText.setText("Pause") ;
 }
 
-
-function loadGame() {
-    // First stop movement
-    ball.body.enable = false;
-    ball2.body.enable = false;
-
-}
-
-
-function saveGame() {
-    // First stop movement
-    ball.body.enable = false;
-    ball2.body.enable = false;
-
-}
-
+// Possibly TODO - not working
 // // function to scale up the game to full screen
 // function goFullScreen(){
 //     this.scale.pageAlignHorizontally = true;
