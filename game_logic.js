@@ -9,6 +9,7 @@ var cursorSpeed = 10;
 var minVelocityX = 300;
 var playingTime = 5000;
 var pauseButton;
+var savedValuesLoaded = false;
 
 // Enable mobile accelerometer
 if ( !window.requestAnimationFrame ) {
@@ -137,6 +138,13 @@ function create ()
 
 function update()
 {
+    // Check if new values have been loaded from service
+    // and update Date and time
+    if(savedValuesLoaded) {
+        scoreText.text = score;
+        playingTimeText.text = playingTime;
+    }
+    
     // First check that there is playingTime left
     if(playingTime > 0) {
         // Decrease playingTime if Pause button not pressed
