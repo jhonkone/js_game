@@ -136,62 +136,63 @@ function create ()
     } ;
 }
 
-
+// Update elements location & velocity based on inputs 
+// and monitor collisions
 function update()
 {   
-    // First check that there is playingTime left
-    if(playingTime > 0) {
-        // Decrease playingTime if Pause button not pressed
-        if(pauseText.text === "Pause") {
+    // First check that game is not paused
+    if(pauseText.text === "Pause") {
+
+        // Check that there is playingTime left
+        if(playingTime > 0) {
+            // Decrease playingTime
             playingTime--;
             playingTimeText.setText("Time: " + (playingTime));
-        }
         
-        // Check collisions
-        this.physics.collide(ball, ball2, collisionHandler, null, this);
+            // Check collisions
+            this.physics.collide(ball, ball2, collisionHandler, null, this);
 
-
-        //Don't let the lower ball stop
-        var velX = ball2.body.velocity.x; 
-        if(Math.abs(velX) < minVelocityX) {
-            // Consider direction
-            if(velX < 0) {
-                ball2.body.setVelocity(velX - minVelocityX, ball2.body.velocity.y);
+            // Keep the "lower" (not-controllable) ball always moving
+            var velX = ball2.body.velocity.x; 
+            if(Math.abs(velX) < minVelocityX) {
+                // Consider direction
+                if(velX < 0) {
+                    ball2.body.setVelocity(velX - minVelocityX, ball2.body.velocity.y);
+                }
+                else{
+                    ball2.body.setVelocity(velX + minVelocityX, ball2.body.velocity.y);
+                }                
             }
-            else{
-                ball2.body.setVelocity(velX + minVelocityX, ball2.body.velocity.y);
+
+            // Handle keyboard input for moving ball
+            if (cursors.left.isDown)
+            {
+                ball.body.setVelocity(ball.body.velocity.x - cursorSpeed, ball.body.velocity.y);
+                
             }
-            
-        }
+            else if (cursors.right.isDown)
+            {
+                ball.body.setVelocity(ball.body.velocity.x + cursorSpeed, ball.body.velocity.y);
+            }
+            else if (cursors.up.isDown)
+            {
+                ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y - cursorSpeed);
+            }
 
-        // Keyboard input for moving ball
-        if (cursors.left.isDown)
-        {
-            ball.body.setVelocity(ball.body.velocity.x - cursorSpeed, ball.body.velocity.y);
-            
+            else if (cursors.down.idDown) {
+                ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y + cursorSpeed);
+            }
         }
-        else if (cursors.right.isDown)
-        {
-            ball.body.setVelocity(ball.body.velocity.x + cursorSpeed, ball.body.velocity.y);
+        // Else time is up 
+        else {
+            // Stop movement
+            if(pauseText.text === "Pause") {
+                togglePause();
+            }
+            // Hide Pause (or Cont.) button   
+            pauseButton.visible = false;
+            pauseText.visible = false;
         }
-        else if (cursors.up.isDown)
-        {
-            ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y - cursorSpeed);
-        }
-
-        else if (cursors.down.idDown) {
-            ball.body.setVelocity(ball.body.velocity.x, ball.body.velocity.y + cursorSpeed);
-        }
-    }
-    // When time is up 
-    else {
-        // Stop movement
-        if(pauseText.text === "Pause") {
-            togglePause();
-        }
-        // Hide Pause (or Cont.) button   
-        pauseButton.visible = false;
-        pauseText.visible = false;
     }
 }
 
