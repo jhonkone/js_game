@@ -93,9 +93,9 @@ $(document).ready( function() {
         // Set loaded values and update elements
         // TODO: CHECK VALUES
         score = evt.data.gameState.score;
-        scoreText.text.setText(score); 
+        scoreText.setText("Score: " + score);
         playingTime =  evt.data.gameState.playingTime;
-        scoreText.text.setText(playingTime); 
+        playingTimeText.setText("Time: " + playingTime);
         ball.x = evt.data.gameState.ball_location_x;
         ball.y = evt.data.gameState.ball_location_y;
         ball.body.velocity.x = evt.data.gameState.ball_velocity_x; 
@@ -104,10 +104,6 @@ $(document).ready( function() {
         ball2.y = evt.data.gameState.ball2_location_y;
         ball2.body.velocity.x = evt.data.gameState.ball2_velocity_x; 
         ball2.body.velocity.y = evt.data.gameState.ball2_velocity_y;
-        
-        // Set flag to inform UI's update loop to udpate time and score 
-        // text elements (special case when Pause button is on)
-        savedValuesLoaded = true;
 
         // Enable Pause (Cont.) button that might be disabled 
         pauseButton.visible = true;

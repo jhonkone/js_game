@@ -8,6 +8,7 @@ var defaultBounce = (1, 1);
 var cursorSpeed = 10;
 var minVelocityX = 300;
 var playingTime = 5000;
+var playingTimeText = '';
 var pauseButton;
 var savedValuesLoaded = false;
 
@@ -68,7 +69,7 @@ function create ()
 
     scoreText = this.add.text(16, 15, 'Score: 0', { font: "bold 28px Arial", fill: '#000' });
     
-    playingTimeText = this.add.text(16, 64, 'Score: 0', { font: "bold 28px Arial", fill: '#000' });
+    playingTimeText = this.add.text(16, 64, 'Time: 0', { font: "bold 28px Arial", fill: '#000' });
 
     submitButton = this.add.sprite(229, 31, 'button');
     submitButton.setInteractive();
@@ -137,14 +138,7 @@ function create ()
 
 
 function update()
-{
-    // Check if new values have been loaded from service
-    // and update Date and time
-    if(savedValuesLoaded) {
-        scoreText.text = score;
-        playingTimeText.text = playingTime;
-    }
-    
+{   
     // First check that there is playingTime left
     if(playingTime > 0) {
         // Decrease playingTime if Pause button not pressed
