@@ -19,6 +19,7 @@ $(document).ready( function() {
 
     // Sends this game's state to the service.
     $("#save").click( function () {
+      console.log("PÖH");
       var msg = {
         "messageType": "SAVE",
         "gameState": {
