@@ -36,6 +36,9 @@ $(document).ready( function() {
       };
       window.parent.postMessage(msg, "*");
 
+      // Inform user
+      window.alert("The present game state was submitted to the service!");
+
       console.log("Submitted msg:" + msg.messageType, msg.gameState.score, 
       msg.gameState.playingTime, msg.gameState.ball_location_x, msg.gameState.ball_location_y, 
       msg.gameState.ball_velocity_x, msg.gameState.ball_velocity_y, msg.gameState.ball2_location_x, 
@@ -59,6 +62,8 @@ $(document).ready( function() {
         "score": score
       };
       window.parent.postMessage(msg, "*");
+      // Inform user
+      window.alert("Your score were submitted to the service!");
       console.log("Submitted msg:" + msg.messageType, msg.score);
     });
 
@@ -96,6 +101,9 @@ $(document).ready( function() {
         ball2.y = evt.data.gameState.ball2_location_y;
         ball2.body.velocity.x = evt.data.gameState.ball2_velocity_x; 
         ball2.body.velocity.y = evt.data.gameState.ball2_velocity_y;
+
+        // Inform user
+        window.alert("The last saved game state was loaded successfully!");
 
         // Enable Pause (Cont.) button that might be disabled 
         pauseButton.visible = true;
