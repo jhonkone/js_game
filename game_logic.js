@@ -11,26 +11,10 @@ var playingTime = 5000;
 var playingTimeText = '';
 var pauseButton;
 var savedValuesLoaded = false;
+var finalScoreSubmitted = false;
 
-// Enable mobile accelerometer
-if ( !window.requestAnimationFrame ) {
- 
-    window.requestAnimationFrame = ( function() {
- 
-        return window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
- 
-            window.setTimeout( callback, 16 );
- 
-        };
- 
-    } )();
-    
-}
 
+// Phaser Game object configuration
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -62,7 +46,26 @@ function preload ()
 
 }
 
-// Create sprites for images, texts and sprites and add them to canvas
+// Enable mobile accelerometer
+if ( !window.requestAnimationFrame ) {
+ 
+    window.requestAnimationFrame = ( function() {
+ 
+        return window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+ 
+            window.setTimeout( callback, 16 );
+ 
+        };
+ 
+    } )();
+    
+}
+
+// Create images, texts and sprites and add them to canvas
 function create ()
 {
     this.add.image(400, 300, 'background');
@@ -118,9 +121,7 @@ function create ()
 
     // Create variable for keyboard input
     cursors = this.input.keyboard.createCursorKeys();
-    // Possible TODO: sounds and a button for enabling/disabling sounds
-    //soundToggle = this.add.button(config.width - 150, 15, 'button', this.toggleSound, this);
-
+    
     //Add deviceOrientation event listener for mobile accelerometer input data
     if (window.DeviceOrientationEvent) {
     
@@ -192,6 +193,11 @@ function update()
             // Hide Pause (or Cont.) button   
             pauseButton.visible = false;
             pauseText.visible = false;
+            // Submit final score once
+            if(finalScoreSubmitted === false) {
+                document.getElementById("submit_score").click(); // Click the hidden submit_score button
+                finalScoreSubmitted = true;
+            }
         }
     }
 }
@@ -209,13 +215,3 @@ function togglePause() {
 
     pauseText.text === "Pause" ? pauseText.setText(" Cont.") : pauseText.setText("Pause") ;
 }
-
-
-// Possibly TODO - not working
-// // function to scale up the game to full screen
-// function goFullScreen(){
-//     this.scale.pageAlignHorizontally = true;
-//     this.scale.pageAlignVertically = true;
-//     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-//     this.scale.setScreenSize(true);
-// }
