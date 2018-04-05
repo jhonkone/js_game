@@ -1,7 +1,0 @@
-preload();
-
-create();
-
-// class Welcome {
-
-// }

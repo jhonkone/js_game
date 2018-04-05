@@ -11,7 +11,7 @@ $(document).ready( function() {
         messageType: "SETTING",
         options: {
             "width": 800, //Integer
-          "height": 600 //Integer
+            "height": 600 //Integer
           }
       };
       window.parent.postMessage(message, "*");
@@ -36,34 +36,32 @@ $(document).ready( function() {
       };
       window.parent.postMessage(msg, "*");
 
-      // TODO: REMOVE LINES:
       console.log("Submitted msg:" + msg.messageType,
       msg.gameState.score, msg.gameState.playingTime, 
-      msg.gameState.ball_location_x, msg.gameState.ball_location_y, msg.gameState.ball_velocity_x, msg.gameState.ball_velocity_y,
-      msg.gameState.ball2_location_x, msg.gameState.ball2_location_y, msg.gameState.ball2_velocity_x, msg.gameState.ball2_velocity_y);  
+      msg.gameState.ball_location_x, msg.gameState.ball_location_y, 
+      msg.gameState.ball_velocity_x, msg.gameState.ball_velocity_y,
+      msg.gameState.ball2_location_x, msg.gameState.ball2_location_y, 
+      msg.gameState.ball2_velocity_x, msg.gameState.ball2_velocity_y);  
     });
 
-    // Sends a request to the service for a
-    // state to be sent, if there is one.
+    // Sends a request to the service for a state to be sent, if there is one.
     $("#load").click( function () {
       var msg = {
         "messageType": "LOAD_REQUEST",
       };
       window.parent.postMessage(msg, "*");
-      console.log("Submitted msg:" + msg.messageType); // TODO: REMOVE LINE
+      console.log("Submitted msg:" + msg.messageType);
     });
 
 
     // Submits score to service
-    // Possible TODO: This could be called once when time is up 
-    // and Submit button could be removed
     $("#submit_score").click( function () {
       var msg = {
         "messageType": "SCORE",
         "score": score
       };
       window.parent.postMessage(msg, "*");
-      console.log("Submitted msg:" + msg.messageType, msg.score); // TODO: REMOVE LINE
+      console.log("Submitted msg:" + msg.messageType, msg.score);
     });
 
     // Request the service to set the resolution of the
@@ -82,16 +80,12 @@ $(document).ready( function() {
 
     // Listen incoming messages, if the messageType
     // is LOAD then the game state will be loaded.
-    // NOTE THAT NO CHECKING IS DONE, whether the
-    // gameState in the incoming message contains
-    // correct information.
     //
     // Also handles any errors that the service
     // wants to send (displays them as an alert).
     window.addEventListener("message", function(evt) {
       if(evt.data.messageType === "LOAD") {
         // Set loaded values and update elements
-        // TODO: CHECK VALUES
         score = evt.data.gameState.score;
         scoreText.setText("Score: " + score);
         playingTime =  evt.data.gameState.playingTime;
@@ -109,7 +103,6 @@ $(document).ready( function() {
         pauseButton.visible = true;
         pauseText.visible = true;
 
-        // TODO: REMOVE LOGGING LINES:
         console.log("Received msg:" + evt.data.messageType,
         evt.data.gameState.score, evt.data.gameState.playingTime, 
         evt.data.gameState.ball_location_x, evt.data.gameState.ball_location_y, evt.data.gameState.ball_velocity_x, evt.data.gameState.ball_velocity_y,
@@ -122,7 +115,6 @@ $(document).ready( function() {
 
 
 // Functions which triggers hidden html button elements for service communication
-
 function submitScore() {
     // First stop movement
     if(pauseText.text === "Pause") {
