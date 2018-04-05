@@ -21,8 +21,6 @@ Time is limited and clock is running all the time unless you press Pause / Conti
 - Up Arrow
 - Down Arrow
 
-*NOTE* about controls - It is not recommended to open browser's developer tools when playing - this might cause lose of controls, even occasionally after closing the tools and reloading the page."
-
 *Mobile device controls*
 
 This game is playable with mobile devices (phones, tablets etc) which have an accelometer an HTML5 browser! The device has to be held in _upright position and Auto Rotate disabled_.
@@ -33,9 +31,7 @@ This game is playable with mobile devices (phones, tablets etc) which have an ac
 *Submit, Save and Load Buttons*
 
 In addition to Pause button there are buttons for _Submit, Load and Save._ Pressing any of the buttons will pause the game.
-- Submit button - Submits your present score to service
-    - The final score is automatically submitted to service, but this button can
-    be used if you want to get your intermediate result visible to highscores.
+- Submit button - Submits your present score to service:
 - Save button - Submits the state of the game to the service
     - Including present score, playing time and position & velocity of both of the balls
 - Load button - Loads the saved game state
